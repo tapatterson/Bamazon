@@ -13,18 +13,11 @@ var connection = mysql.createConnection({
 	database: "bamazon"
 });
 
-//global variables
-// var cart = [];
-// var totalPrice =0;
-
 //connect to mysql, run main function
 connection.connect(function(err) {
   if (err) throw err;
-  // console.log("connected as id " + connection.threadId);
   showItems() 
-  	// productsList();
 });
-
 
 function showItems() {
 	//cli- table (using cli-table npm)	
@@ -32,8 +25,8 @@ function showItems() {
     head: ['Item ID', 'Product', 'Department', 'Price', 'Qty Available']
   });
 
-  	//get all rows from the Products table
-  	connection.query('SELECT * FROM products', function(err, res) {
+  //get all rows from the Products table
+	connection.query('SELECT * FROM products', function(err, res) {
     if (err) throw err;
     //add all of the rows to the cli-table
     for (var i = 0; i < res.length; i++) {
@@ -43,20 +36,20 @@ function showItems() {
     	console.log(table.toString());
     	//callback the productList function to prompt the user to add items to cart
     	selectItem();
-    })
+  })
 }
 
 function selectItem(){
 	var items = [];
+	
 	//get product id's from table
-
 	connection.query("SELECT item_id FROM products", function(err, res){
 		if(err) throw err;
 		for (var i = 0; i < res.length; i++){
 			items.push(res[i].item_id)
 		}
 
-		console.log("array has: " + items);
+		// console.log("array has: " + items);
 
 		inquirer.prompt ([
 		{
@@ -69,18 +62,18 @@ function selectItem(){
 		]).then(function(answer){
 			console.log(answer.option);
 			console.log("The item number is: " + answer.option);
-			console.log("The value passed is: " + items);
+			// console.log("The value passed is: " + items);
 			amountSelected(items, answer.option);
 		})
 	});
 }
 
 function amountSelected(items, itemsChosen){
-	console.log("Coming in is: " + items);
+	// console.log("Coming in is: " + items);
 	var item = items.shift();
 	var itemsChosen = itemsChosen;
 	item = itemsChosen;
-	console.log("The selected item is : " + itemsChosen);
+	// console.log("The selected item is : " + itemsChosen);
 
 	var itemQuantity;
 	var department;
@@ -95,7 +88,7 @@ function amountSelected(items, itemsChosen){
 		department = res[0].department_name;
 	});
 
-	//prompt the user what qty they want
+	//prompt the user asking what qty they want
 	inquirer.prompt([
 	{
 		type: "input",
@@ -111,10 +104,10 @@ function amountSelected(items, itemsChosen){
 
 		else {
 			itemQuantity -= amountIs.amount;
-			console.log(itemQuantity + " remaining")
+			// console.log(itemQuantity + " remaining")
 			var total = amountIs.amount * itemCost;
-			console.log("total is $" + total);
-			console.log("OK! Let's continue")
+			console.log("Total due is $" + total);
+			console.log("OK! Would you like to continue shopping?")
 		}
 
 		updateDB(itemQuantity, itemsChosen);
@@ -125,16 +118,16 @@ function amountSelected(items, itemsChosen){
 }
 
 function updateDB(itemQuantity,itemsChosen){
-	var totalQuan = itemQuantity;
+	var totalQty = itemQuantity;
   var itemId = itemsChosen;
-  console.log("Amount Left is " + totalQuan);
-  console.log("Item Selection is: " + itemId);
+  // console.log("Amount remaining " + totalQty);
+  // console.log("The item selected is: " + itemId);
 
   var query = connection.query(
     "UPDATE products SET ? WHERE ?",
       [
         {
-          stock_quantity: totalQuan
+          stock_quantity: totalQty
         },
         {
           item_id: itemId
@@ -142,15 +135,9 @@ function updateDB(itemQuantity,itemsChosen){
 
     ],function(err,res) {
         if (err) throw err;
-        //console.log(res + " products updated!\n");
-        
-        //console.log("Stock Quantity is " + query.stock_quantity);
-        console.log("New amount: " +totalQuan);
+        console.log("New stock quantity: " +totalQty);
     }
-
  )
-
-
 connection.end();	
 
 }
