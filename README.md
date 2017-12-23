@@ -16,3 +16,4 @@ However, if your store does have enough of the product, the application will ful
 The SQL database will update to reflect the remaining quantity.
 
 Once the update goes through, the customer will be presented with the total cost of their purchase.
+
