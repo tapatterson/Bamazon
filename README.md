@@ -1,5 +1,5 @@
 # Bamazon
-An Amazon-like storefront using MySQL 
+An Amazon-like storefront using MySQL and Node.js
 
 When running the bamazonCustomer.js application it will first display all of the items available for sale. Included are the ids, names, and prices of products for sale.
 
