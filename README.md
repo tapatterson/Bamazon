@@ -17,3 +17,5 @@ The SQL database will update to reflect the remaining quantity.
 
 Once the update goes through, the customer will be presented with the total cost of their purchase.
 
+Video Walkthrough link: https://youtu.be/4ossAcMEhz8
+
